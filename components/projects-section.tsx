@@ -15,6 +15,12 @@ const projects = [
     tags: ["运营", "优化", "管理"],
   },
   {
+    title: "Rust（腐蚀）服务器开发与运营",
+    description:
+      "提供 Rust（腐蚀）游戏服务器开发与运营，包括服务器搭建、性能优化、玩法系统定制，并开发 uMod/Oxide 的 C# 插件满足功能需求。",
+    tags: ["Rust", "腐蚀", "uMod/Oxide", "C#"],
+  },
+  {
     title: "Web 应用开发",
     description: "官网、后台管理系统等 Web 应用开发。使用现代技术栈，打造高性能、易维护的网站应用。",
     tags: ["Next.js", "React", "Vue", "TypeScript"],
@@ -28,11 +34,6 @@ const projects = [
     title: "后端服务开发",
     description: "Java 后端服务和 Python 应用程序开发，构建稳定可靠的后端系统。",
     tags: ["Java", "Spring", "Python"],
-  },
-  {
-    title: "定制化开发服务",
-    description: "根据您的需求提供定制化开发服务，从游戏插件到 Web 应用，我们都能为您实现。",
-    tags: ["定制开发", "技术咨询"],
   },
 ]
 
