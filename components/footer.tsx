@@ -27,6 +27,10 @@ function AfDianIcon({ className }: { className?: string }) {
   )
 }
 
+function CarmJosIcon({ className }: { className?: string }) {
+  return <img src="https://www.carm.cc/logo.png" alt="" aria-hidden="true" className={className} />
+}
+
 interface FooterLink {
   title: string
   href: string
@@ -39,10 +43,6 @@ interface FooterSection {
 }
 
 const footerLinks: FooterSection[] = [
-  {
-    label: "",
-    links: [],
-  },
   {
     label: "",
     links: [],
@@ -61,6 +61,10 @@ const footerLinks: FooterSection[] = [
       { title: "哔哩哔哩", href: "https://space.bilibili.com/398647207", icon: TvIcon },
       { title: "爱发电", href: "https://ifdian.net/a/ooci_co", icon: AfDianIcon },
     ],
+  },
+  {
+    label: "友情链接",
+    links: [{ title: "CarmJos", href: "https://www.carm.cc/", icon: CarmJosIcon }],
   },
 ]
 
