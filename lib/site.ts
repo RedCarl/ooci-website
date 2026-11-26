@@ -160,6 +160,49 @@ export const apps: Product[] = [
       },
     ],
   },
+  {
+    id: "catgame",
+    group: "ios",
+    name: { zh: "猫猫游戏屋", en: "CatGame" },
+    subtitle: { zh: "iOS · 给猫玩的全屏小游戏", en: "iOS · Full-screen games for cats" },
+    description: {
+      zh: "六个给猫拍的小游戏：抓小鱼、捉蝌蚪、打地鼠、追光点、戳泡泡、逗猫棒。按猫的二色视觉调过对比度，双指慢滑才退出，全屏纯单机，没有积分、排名和广告。",
+      en: "Six full-screen games made for cats — fish, tadpoles, whack-a-mole, light chasing, bubbles and a feather wand. Tuned for feline dichromatic vision, with a mis-tap-proof two-finger exit. No scores, rankings, accounts or ads.",
+    },
+    tags: ["SwiftUI", "Canvas", "iOS"],
+    icon: "https://catgame.carljoy.cn/assets/icon.png",
+    badge: "App Store",
+    note: {
+      zh: "猫爪乱拍容易误触，退出改成双指慢滑；建议再打开系统「引导式访问」。",
+      en: "Cats tap everywhere, so exiting takes a slow two-finger swipe — pair it with Guided Access.",
+    },
+    links: [
+      { label: { zh: "官网", en: "Website" }, href: "https://catgame.carljoy.cn/", kind: "website" },
+      {
+        label: "App Store",
+        href: "https://apps.apple.com/cn/app/id6838260474",
+        kind: "appstore",
+      },
+    ],
+  },
+  {
+    id: "dsh-remote",
+    group: "ios",
+    name: "DSH Remote",
+    subtitle: { zh: "iOS · 远程查看与审批 DSH 任务", en: "iOS · Watch & approve DSH tasks" },
+    description: {
+      zh: "原生 SwiftUI 客户端：扫码连到电脑上的 DeepSeek Harness，看工作区与会话、跟着实时输出，在手机上批准或拒绝工具调用。不跑 Agent、不加载动态代码，计算都留在电脑。",
+      en: "A native SwiftUI client that pairs with the DeepSeek Harness on your computer: browse workspaces and sessions, follow live output, and approve or reject tool calls from your phone. No agent runtime, no dynamic code — the work stays on your machine.",
+    },
+    tags: ["SwiftUI", "WebSocket", "Keychain"],
+    icon: "/products/dshremote-icon.png",
+    badge: "iOS",
+    note: {
+      zh: "电脑端跑仓库里自带的 Node 插件就能配对；中国区上架还差 App 备案。",
+      en: "The computer side runs the bundled Node plugin; the China store release is waiting on filing.",
+    },
+    links: [{ label: "App Store", kind: "soon" }],
+  },
 ]
 
 export const mhub: Product = {
@@ -196,7 +239,7 @@ export type DshPlugin = {
   repo: string
   description: Text
   href?: string
-  icon: "plug" | "sync" | "phone" | "wallet"
+  icon: "plug" | "sync" | "phone" | "wallet" | "flow"
 }
 
 export const dshPlugins: DshPlugin[] = [
@@ -239,5 +282,15 @@ export const dshPlugins: DshPlugin[] = [
       en: "See balance, usage and token stats in the sidebar, across multiple API providers.",
     },
     icon: "wallet",
+  },
+  {
+    id: "ios-pipeline",
+    name: { zh: "iOS 全流程", en: "iOS pipeline" },
+    repo: "dsh-ios-pipeline",
+    description: {
+      zh: "把 iOS 从立项到提审拆成 /ios-* 命令，开发规范自动注入每个 iOS 会话。",
+      en: "Splits iOS work from kickoff to review into /ios-* commands and injects dev standards into every iOS session.",
+    },
+    icon: "flow",
   },
 ]

@@ -97,7 +97,7 @@ const zh: Dictionary = {
   meta: {
     title: "技术与生活 - CarlJoy",
     description:
-      "CarlJoy 的个人网站：记录我做的软件——Liteshot、OTP、照片整理、TinyMusic、MHUB Lite、RustPro，以及一些 DeepSeek Harness 插件。",
+      "CarlJoy 的个人网站：记录我做的软件——Liteshot、OTP、猫猫游戏屋、照片整理、TinyMusic、MHUB Lite、RustPro，以及一些 DeepSeek Harness 插件。",
     keywords: [
       "CarlJoy",
       "技术与生活",
@@ -105,6 +105,8 @@ const zh: Dictionary = {
       "独立开发",
       "Liteshot",
       "OTP",
+      "猫猫游戏屋",
+      "CatGame",
       "TinyMusic",
       "RustPro",
       "DeepSeek Harness",
@@ -148,13 +150,13 @@ const zh: Dictionary = {
       nowLabel: "现在",
       now: [
         "维护 Liteshot 与 RustPro",
-        "OTP、TinyMusic iOS 已上架",
+        "OTP、TinyMusic、猫猫游戏屋 已上架",
         "照片整理 即将上架",
         "折腾 DeepSeek Harness 插件",
       ],
       stats: [
-        { value: "7", label: "个产品" },
-        { value: "4", label: "个 DSH 插件" },
+        { value: "9", label: "个产品" },
+        { value: "5", label: "个 DSH 插件" },
       ],
       more: "看完整列表",
     },
@@ -253,7 +255,7 @@ const en: Dictionary = {
   meta: {
     title: "Tech & Life — CarlJoy",
     description:
-      "CarlJoy's personal site: notes on the software I build — Liteshot, OTP, Photo Tidy, TinyMusic, MHUB Lite and RustPro, plus a handful of DeepSeek Harness plugins.",
+      "CarlJoy's personal site: notes on the software I build — Liteshot, OTP, CatGame, Photo Tidy, TinyMusic, MHUB Lite and RustPro, plus a handful of DeepSeek Harness plugins.",
     keywords: [
       "CarlJoy",
       "Tech & Life",
@@ -263,6 +265,7 @@ const en: Dictionary = {
       "macOS",
       "Liteshot",
       "OTP",
+      "CatGame",
       "TinyMusic",
       "RustPro",
       "DeepSeek Harness",
@@ -306,13 +309,13 @@ const en: Dictionary = {
       nowLabel: "Now",
       now: [
         "Maintaining Liteshot and RustPro",
-        "OTP and TinyMusic for iOS are live",
+        "OTP, TinyMusic and CatGame are live",
         "Photo Tidy — coming soon",
         "Tinkering with DeepSeek Harness plugins",
       ],
       stats: [
-        { value: "7", label: "products" },
-        { value: "4", label: "DSH plugins" },
+        { value: "9", label: "products" },
+        { value: "5", label: "DSH plugins" },
       ],
       more: "See the full list",
     },

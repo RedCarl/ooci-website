@@ -8,6 +8,7 @@ import {
   Server,
   Smartphone,
   Wallet,
+  Workflow,
 } from "lucide-react"
 import { getDictionary } from "@/lib/dictionary"
 import { tr, type Locale } from "@/lib/locale"
@@ -158,6 +159,7 @@ const dshIcons: Record<DshPlugin["icon"], typeof Plug> = {
   sync: RefreshCw,
   phone: Smartphone,
   wallet: Wallet,
+  flow: Workflow,
 }
 
 export function Work({ locale }: { locale: Locale }) {
