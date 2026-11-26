@@ -5,8 +5,9 @@ import { Work } from "@/components/work"
 import { About } from "@/components/about"
 import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
+import { type Locale } from "@/lib/locale"
 
-export default function HomePage() {
+export function HomeView({ locale }: { locale: Locale }) {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#08090b]">
       <div className="fixed inset-0 -z-10">
@@ -31,14 +32,14 @@ export default function HomePage() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.05),transparent_55%)]" />
 
       <div className="relative z-10">
-        <SiteNav />
+        <SiteNav locale={locale} />
         <main>
-          <Hero />
-          <Work />
-          <About />
-          <Contact />
+          <Hero locale={locale} />
+          <Work locale={locale} />
+          <About locale={locale} />
+          <Contact locale={locale} />
         </main>
-        <Footer />
+        <Footer locale={locale} />
       </div>
     </div>
   )

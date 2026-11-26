@@ -4,15 +4,13 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRight, Menu, X } from "lucide-react"
+import { getDictionary } from "@/lib/dictionary"
+import { localeInfo, type Locale } from "@/lib/locale"
 import { site } from "@/lib/site"
+import { LanguageSwitcher } from "./language-switcher"
 
-const links = [
-  { name: "作品", href: "#work" },
-  { name: "关于", href: "#about" },
-  { name: "联系", href: "#contact" },
-]
-
-export function SiteNav() {
+export function SiteNav({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -34,9 +32,9 @@ export function SiteNav() {
         }`}
       >
         <Link
-          href="/"
+          href={localeInfo[locale].path}
           className="group flex items-center gap-2.5 rounded-full pr-2"
-          aria-label="技术与生活首页"
+          aria-label={dict.nav.homeAria}
         >
           <span className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors group-hover:bg-white/10">
             <Image
@@ -50,22 +48,22 @@ export function SiteNav() {
           </span>
           <span className="flex flex-col leading-none">
             <span className="text-[13px] font-semibold tracking-wide text-white">
-              技术与生活
+              {dict.nav.brand}
             </span>
             <span className="mt-1 text-[10px] tracking-[0.18em] text-white/40">
-              CARLJOY
+              {dict.nav.brandSub}
             </span>
           </span>
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          {links.map((item) => (
+          {dict.nav.links.map((item) => (
             <a
               key={item.href}
               href={item.href}
               className="rounded-full px-4 py-2 text-sm text-white/65 transition-colors hover:bg-white/5 hover:text-white"
             >
-              {item.name}
+              {item.label}
             </a>
           ))}
         </div>
@@ -79,40 +77,44 @@ export function SiteNav() {
           >
             GitHub
           </a>
+          <LanguageSwitcher locale={locale} />
           <a
             href="#contact"
             className="group inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-transform hover:scale-[1.03]"
           >
-            联系我
+            {dict.nav.cta}
             <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </a>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((value) => !value)}
-          className="flex size-9 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white md:hidden"
-          aria-expanded={open}
-          aria-label={open ? "关闭菜单" : "打开菜单"}
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <LanguageSwitcher locale={locale} variant="compact" />
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            className="flex size-9 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            aria-expanded={open}
+            aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </nav>
 
       <div
         className={`mx-auto mt-2 max-w-6xl overflow-hidden rounded-3xl border border-white/10 bg-black/90 backdrop-blur-xl transition-all duration-300 md:hidden ${
-          open ? "max-h-80 opacity-100" : "pointer-events-none max-h-0 border-transparent opacity-0"
+          open ? "max-h-96 opacity-100" : "pointer-events-none max-h-0 border-transparent opacity-0"
         }`}
       >
         <div className="flex flex-col p-2">
-          {links.map((item) => (
+          {dict.nav.links.map((item) => (
             <a
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
               className="rounded-2xl px-4 py-3 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white"
             >
-              {item.name}
+              {item.label}
             </a>
           ))}
           <a
@@ -124,16 +126,20 @@ export function SiteNav() {
           >
             GitHub
           </a>
+          <LanguageSwitcher
+            locale={locale}
+            variant="menu"
+            onNavigate={() => setOpen(false)}
+          />
           <a
             href="#contact"
             onClick={() => setOpen(false)}
             className="mt-1 rounded-2xl bg-white px-4 py-3 text-center text-sm font-medium text-black"
           >
-            联系我
+            {dict.nav.cta}
           </a>
         </div>
       </div>
     </header>
   )
 }
-

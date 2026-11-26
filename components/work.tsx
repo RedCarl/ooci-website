@@ -7,10 +7,19 @@ import {
   RefreshCw,
   Server,
   Smartphone,
-  Users,
   Wallet,
 } from "lucide-react"
-import { apps, dshPlugins, mhub, type DshPlugin, type Product, type ProductGroup, type ProductLink } from "@/lib/site"
+import { getDictionary } from "@/lib/dictionary"
+import { tr, type Locale } from "@/lib/locale"
+import {
+  apps,
+  dshPlugins,
+  mhub,
+  type DshPlugin,
+  type Product,
+  type ProductGroup,
+  type ProductLink,
+} from "@/lib/site"
 
 function AppleIcon({ className }: { className?: string }) {
   return (
@@ -28,17 +37,19 @@ function LinkIcon({ kind, className }: { kind: ProductLink["kind"]; className?: 
 }
 
 /* 列表里的小胶囊按钮：手机上只留图标，避免把行撑宽 */
-function LinkChip({ link }: { link: ProductLink }) {
+function LinkChip({ link, locale }: { link: ProductLink; locale: Locale }) {
+  const dict = getDictionary(locale)
   const icon = <LinkIcon kind={link.kind} className="size-3 shrink-0" />
+  const label = tr(link.label, locale)
 
   if (!link.href) {
     return (
       <span
-        title={link.label + " · 即将上架"}
+        title={`${label} · ${dict.work.comingSoon}`}
         className="inline-flex items-center gap-1.5 rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-1 text-[10px] text-white/35"
       >
         {icon}
-        <span className="hidden sm:inline">即将上架</span>
+        <span className="hidden sm:inline">{dict.work.comingSoon}</span>
       </span>
     )
   }
@@ -50,8 +61,8 @@ function LinkChip({ link }: { link: ProductLink }) {
       href={link.href}
       target="_blank"
       rel="noreferrer"
-      aria-label={link.label}
-      title={link.label}
+      aria-label={label}
+      title={label}
       className={
         primary
           ? "inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-medium text-black transition-transform hover:scale-105"
@@ -59,13 +70,13 @@ function LinkChip({ link }: { link: ProductLink }) {
       }
     >
       {icon}
-      <span className="hidden sm:inline">{link.label}</span>
+      <span className="hidden sm:inline">{label}</span>
       <ArrowUpRight className="size-2.5 opacity-40" />
     </a>
   )
 }
 
-function AppRow({ product }: { product: Product }) {
+function AppRow({ product, locale }: { product: Product; locale: Locale }) {
   return (
     <li className="flex items-center gap-4 border-b border-white/[0.06] py-3.5 transition-colors last:border-0 hover:bg-white/[0.02]">
       {/* 图标用 background-image：远端图标挂了时，底下的首字母还在 */}
@@ -74,20 +85,24 @@ function AppRow({ product }: { product: Product }) {
         className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-white/10 bg-white/[0.06] bg-cover bg-center text-[13px] font-semibold text-white/30"
         style={{ backgroundImage: "url(" + product.icon + ")" }}
       >
-        {product.name.slice(0, 1)}
+        {tr(product.name, locale).slice(0, 1)}
       </span>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <h3 className="truncate text-sm font-medium text-white/90">{product.name}</h3>
-          <span className="truncate text-[11px] text-white/30">{product.subtitle}</span>
+          <h3 className="truncate text-sm font-medium text-white/90">
+            {tr(product.name, locale)}
+          </h3>
+          <span className="truncate text-[11px] text-white/30">{tr(product.subtitle, locale)}</span>
         </div>
-        <p className="mt-0.5 truncate text-xs leading-relaxed text-white/40">{product.description}</p>
+        <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-white/40">
+          {tr(product.description, locale)}
+        </p>
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5">
         {product.links.map((link) => (
-          <LinkChip key={link.label + link.kind} link={link} />
+          <LinkChip key={tr(link.label, locale) + link.kind} link={link} locale={locale} />
         ))}
       </div>
     </li>
@@ -103,15 +118,14 @@ function GroupHeader({ label, meta }: { label: string; meta: string }) {
   )
 }
 
-const groups: { id: ProductGroup; label: string; meta: string }[] = [
-  { id: "ios", label: "iPhone · iPad", meta: "App Store" },
-  { id: "desktop", label: "macOS · Windows", meta: "桌面端" },
-]
+const groupOrder: ProductGroup[] = ["ios", "desktop"]
 
-function rustproRow() {
+function RustProRow({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
+  const rustpro = dict.work.rustpro
   const links: ProductLink[] = [
-    { label: "RustPlus", href: "https://plus.rustpro.cc", kind: "website" },
-    { label: "RustPro Clan", href: "https://clan.rustpro.cc", kind: "website" },
+    { label: rustpro.rustplus, href: "https://plus.rustpro.cc", kind: "website" },
+    { label: rustpro.clan, href: "https://clan.rustpro.cc", kind: "website" },
   ]
 
   return (
@@ -123,16 +137,16 @@ function rustproRow() {
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <h3 className="truncate text-sm font-medium text-white/90">RustPro</h3>
-          <span className="truncate text-[11px] text-white/30">Rust（腐蚀）· 服务器与战队工具</span>
+          <span className="truncate text-[11px] text-white/30">{rustpro.subtitle}</span>
         </div>
-        <p className="mt-0.5 truncate text-xs leading-relaxed text-white/40">
-          Rust+ 服务器控制台、战队开荒与成员管理，基因计算与清档查询还在做。
+        <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-white/40">
+          {rustpro.description}
         </p>
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5">
         {links.map((link) => (
-          <LinkChip key={link.label} link={link} />
+          <LinkChip key={link.label + link.kind} link={link} locale={locale} />
         ))}
       </div>
     </li>
@@ -146,29 +160,34 @@ const dshIcons: Record<DshPlugin["icon"], typeof Plug> = {
   wallet: Wallet,
 }
 
-export function Work() {
+export function Work({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
+
   return (
     <section id="work" className="relative px-4 pb-20 pt-24 md:pb-24 md:pt-32">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">作品 / WORK</p>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">
+            {dict.work.eyebrow}
+          </p>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            一直在做的东西
+            {dict.work.title}
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-white/50 sm:text-base">
-            挑几个还在维护的项目，按平台分。
+            {dict.work.intro}
           </p>
         </div>
 
         <div className="mt-10 space-y-9 md:mt-12">
-          {groups.map((group) => {
-            const items = [...apps, mhub].filter((product) => product.group === group.id)
+          {groupOrder.map((groupId) => {
+            const group = dict.work.groups[groupId]
+            const items = [...apps, mhub].filter((product) => product.group === groupId)
             return (
-              <div key={group.id}>
+              <div key={groupId}>
                 <GroupHeader label={group.label} meta={group.meta} />
                 <ul className="mt-2 border-t border-white/10">
                   {items.map((product) => (
-                    <AppRow key={product.id} product={product} />
+                    <AppRow key={product.id} product={product} locale={locale} />
                   ))}
                 </ul>
               </div>
@@ -176,9 +195,12 @@ export function Work() {
           })}
 
           <div>
-            <GroupHeader label="Web" meta="浏览器里直接用" />
+            <GroupHeader
+              label={dict.work.groups.web.label}
+              meta={dict.work.groups.web.meta}
+            />
             <ul className="mt-2 border-t border-white/10">
-              {rustproRow()}
+              <RustProRow locale={locale} />
             </ul>
           </div>
         </div>
@@ -187,13 +209,13 @@ export function Work() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">
-                DeepSeek Harness
+                {dict.work.dsh.eyebrow}
               </p>
               <h2 className="mt-2 text-xl font-semibold tracking-tight text-white">
-                顺手做的几个 DSH 插件
+                {dict.work.dsh.title}
               </h2>
             </div>
-            <p className="text-[11px] text-white/30">给日常开发加一点方便</p>
+            <p className="text-[11px] text-white/30">{dict.work.dsh.note}</p>
           </div>
 
           <div className="mt-5 grid gap-2.5 md:grid-cols-2">
@@ -206,16 +228,19 @@ export function Work() {
                   </span>
                   <span className="min-w-0">
                     <span className="flex items-center gap-2">
-                      <span className="text-[13px] font-medium text-white/85">{plugin.name}</span>
+                      <span className="text-[13px] font-medium text-white/85">
+                        {tr(plugin.name, locale)}
+                      </span>
                       <span className="font-mono text-[10px] text-white/20">{plugin.repo}</span>
                     </span>
-                    <span className="mt-0.5 block truncate text-[11px] leading-relaxed text-white/40">
-                      {plugin.description}
+                    <span className="mt-0.5 block line-clamp-2 text-[11px] leading-relaxed text-white/40">
+                      {tr(plugin.description, locale)}
                     </span>
                   </span>
                 </>
               )
-              const shell = "flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.02] px-3.5 py-2.5"
+              const shell =
+                "flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.02] px-3.5 py-2.5"
 
               if (!plugin.href) {
                 return (

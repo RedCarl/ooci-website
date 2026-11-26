@@ -1,50 +1,23 @@
 import Image from "next/image"
 import { ArrowUpRight, Github, Heart, Mail, MessageCircle } from "lucide-react"
+import { getDictionary, type Dictionary } from "@/lib/dictionary"
+import { type Locale } from "@/lib/locale"
 import { site } from "@/lib/site"
 
-const contacts = [
-  {
-    id: "email",
-    label: "邮件",
-    value: site.author.email,
-    href: `mailto:${site.author.email}?subject=来自 carljoy.cn 的留言`,
-    icon: Mail,
-    note: "定制开发 / 合作 / 反馈",
-  },
-  {
-    id: "github",
-    label: "GitHub",
-    value: "github.com/RedCarl",
-    href: site.github,
-    icon: Github,
-    note: "看源码 / 提 Issue",
-  },
-  {
-    id: "qq",
-    label: "QQ",
-    value: site.author.qq,
-    href: "https://wpa.qq.com/msgrd?v=3&uin=2940966174&site=qq&menu=yes",
-    icon: MessageCircle,
-    note: "快速沟通",
-  },
-  {
-    id: "afdian",
-    label: "爱发电",
-    value: "afdian.com/a/nyanyastudios",
-    href: site.afdian,
-    icon: Heart,
-    note: "支持独立开发",
-  },
-]
+type ContactKey = keyof Dictionary["contact"]["items"]
 
 function QrCard({
   image,
   title,
   description,
+  altSuffix,
+  bigTitle,
 }: {
   image: string
   title: string
   description: string
+  altSuffix: string
+  bigTitle: string
 }) {
   return (
     <div className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-2.5 sm:w-[172px]">
@@ -52,12 +25,12 @@ function QrCard({
         href={image}
         target="_blank"
         rel="noreferrer"
-        title={`查看${title}二维码大图`}
+        title={bigTitle.replace("%s", title)}
         className="block overflow-hidden rounded-xl bg-white p-1.5"
       >
         <Image
           src={image}
-          alt={`${title}二维码`}
+          alt={`${title}${altSuffix}`}
           width={720}
           height={720}
           className="h-auto w-full"
@@ -69,7 +42,53 @@ function QrCard({
   )
 }
 
-export function Contact() {
+export function Contact({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
+  const contact = dict.contact
+
+  const contacts: {
+    id: ContactKey
+    label: string
+    value: string
+    href: string
+    note: string
+    icon: typeof Mail
+    external: boolean
+  }[] = [
+    {
+      id: "email",
+      ...contact.items.email,
+      value: site.author.email,
+      href: `mailto:${site.author.email}?subject=${encodeURIComponent(contact.mailSubject)}`,
+      icon: Mail,
+      external: false,
+    },
+    {
+      id: "github",
+      ...contact.items.github,
+      value: "github.com/RedCarl",
+      href: site.github,
+      icon: Github,
+      external: true,
+    },
+    {
+      id: "qq",
+      ...contact.items.qq,
+      value: site.author.qq,
+      href: "https://wpa.qq.com/msgrd?v=3&uin=2940966174&site=qq&menu=yes",
+      icon: MessageCircle,
+      external: true,
+    },
+    {
+      id: "afdian",
+      ...contact.items.afdian,
+      value: "afdian.com/a/nyanyastudios",
+      href: site.afdian,
+      icon: Heart,
+      external: true,
+    },
+  ]
+
   return (
     <section id="contact" className="relative scroll-mt-16 px-4 pb-24 pt-8 md:pb-32">
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-white/12 bg-[radial-gradient(60%_120px_at_50%_0%,rgba(255,255,255,0.08),transparent)] p-6 md:p-10 lg:p-12">
@@ -77,23 +96,21 @@ export function Contact() {
 
         <div className="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">联系 / CONTACT</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">{contact.eyebrow}</p>
             <h2 className="mt-4 max-w-md text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
-              想做个东西，
+              {contact.title[0]}
               <br />
-              或者想吐槽一个 Bug？
+              {contact.title[1]}
             </h2>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">
-              定制开发、产品反馈、合作，都可以直接找我。邮件通常 1–2 天内回复。
-            </p>
+            <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">{contact.intro}</p>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <a
-                href={`mailto:${site.author.email}?subject=定制开发咨询`}
+                href={`mailto:${site.author.email}?subject=${encodeURIComponent(contact.mailSubject)}`}
                 className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-[1.03]"
               >
                 <Mail className="size-4" />
-                发邮件
+                {contact.emailCta}
                 <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </a>
               <a
@@ -108,8 +125,9 @@ export function Contact() {
             </div>
 
             <div className="mt-7 space-y-2 text-[11px] leading-relaxed text-white/35">
-              <p>定制开发请简单说明：要做什么、给谁用、什么时候要。</p>
-              <p>反馈 Bug 请附上系统版本和复现步骤，会快很多。</p>
+              {contact.notes.map((note) => (
+                <p key={note}>{note}</p>
+              ))}
             </div>
           </div>
 
@@ -120,8 +138,8 @@ export function Contact() {
                 <a
                   key={item.id}
                   href={item.href}
-                  target={item.id === "email" ? undefined : "_blank"}
-                  rel={item.id === "email" ? undefined : "noreferrer"}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noreferrer" : undefined}
                   className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5 transition-colors hover:border-white/20 hover:bg-white/[0.06]"
                 >
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/50 transition-colors group-hover:text-white">
@@ -142,7 +160,7 @@ export function Contact() {
             })}
 
             <p className="pt-2 text-center text-[10px] tracking-wide text-white/25">
-              也可以直接加 QQ 或微信，备注「来自 carljoy.cn」。
+              {contact.qqHint}
             </p>
           </div>
         </div>
@@ -150,15 +168,29 @@ export function Contact() {
         <div className="relative mt-10 border-t border-white/10 pt-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="max-w-sm">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">扫码 / WECHAT</p>
-              <p className="mt-3 text-lg font-medium text-white">微信扫码，备注来意</p>
+              <p className="text-[10px] uppercase tracking-[0.25em] text-white/35">
+                {contact.wechat.eyebrow}
+              </p>
+              <p className="mt-3 text-lg font-medium text-white">{contact.wechat.title}</p>
               <p className="mt-2 text-xs leading-relaxed text-white/40">
-                加好友请备注「来自 carljoy.cn」。公众号会发一些开发记录和新品消息。
+                {contact.wechat.description}
               </p>
             </div>
             <div className="grid w-full grid-cols-2 gap-3 sm:flex sm:w-auto">
-              <QrCard image="/contact/wechat.jpg" title="微信" description="扫码添加好友" />
-              <QrCard image="/contact/wechat-public.jpg" title="公众号" description="扫码关注" />
+              <QrCard
+                image="/contact/wechat.jpg"
+                title={contact.qr.wechat.title}
+                description={contact.qr.wechat.description}
+                altSuffix={contact.qr.altSuffix}
+                bigTitle={contact.qr.bigTitle}
+              />
+              <QrCard
+                image="/contact/wechat-public.jpg"
+                title={contact.qr.official.title}
+                description={contact.qr.official.description}
+                altSuffix={contact.qr.altSuffix}
+                bigTitle={contact.qr.bigTitle}
+              />
             </div>
           </div>
         </div>

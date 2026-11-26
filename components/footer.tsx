@@ -1,21 +1,20 @@
 import Image from "next/image"
 import { ArrowUpRight, Github, Mail } from "lucide-react"
+import { getDictionary } from "@/lib/dictionary"
+import { type Locale } from "@/lib/locale"
 import { site } from "@/lib/site"
 
-const navLinks = [
-  { name: "作品", href: "#work" },
-  { name: "关于", href: "#about" },
-  { name: "联系", href: "#contact" },
-]
+export function Footer({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale)
+  const footer = dict.footer
 
-const elsewhere = [
-  { name: "GitHub", href: site.github, icon: Github },
-  { name: "邮件", href: `mailto:${site.author.email}`, icon: Mail },
-  { name: "哔哩哔哩", href: site.bilibili, icon: null },
-  { name: "爱发电", href: site.afdian, icon: null },
-]
+  const elsewhere = [
+    { name: footer.elsewhere.email, href: `mailto:${site.author.email}`, icon: Mail },
+    { name: "GitHub", href: site.github, icon: Github },
+    { name: footer.elsewhere.bilibili, href: site.bilibili, icon: null },
+    { name: footer.elsewhere.afdian, href: site.afdian, icon: null },
+  ]
 
-export function Footer() {
   return (
     <footer className="relative border-t border-white/10 px-4 pb-10 pt-14">
       <div className="mx-auto max-w-6xl">
@@ -32,25 +31,29 @@ export function Footer() {
                 />
               </span>
               <div>
-                <p className="text-sm font-semibold tracking-wide text-white">技术与生活</p>
-                <p className="mt-0.5 text-[10px] tracking-[0.18em] text-white/30">CARLJOY</p>
+                <p className="text-sm font-semibold tracking-wide text-white">{dict.nav.brand}</p>
+                <p className="mt-0.5 text-[10px] tracking-[0.18em] text-white/30">
+                  {dict.nav.brandSub}
+                </p>
               </div>
             </div>
             <p className="mt-5 max-w-xs text-xs leading-relaxed text-white/40">
-              CarlJoy 的个人网站。记录做过的软件，也记录一点生活。
+              {footer.description}
             </p>
           </div>
 
           <div>
-            <h3 className="text-[10px] uppercase tracking-[0.22em] text-white/30">站内</h3>
+            <h3 className="text-[10px] uppercase tracking-[0.22em] text-white/30">
+              {footer.siteLabel}
+            </h3>
             <ul className="mt-4 space-y-2.5">
-              {navLinks.map((item) => (
+              {dict.nav.links.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
                     className="text-xs text-white/45 transition-colors hover:text-white"
                   >
-                    {item.name}
+                    {item.label}
                   </a>
                 </li>
               ))}
@@ -58,7 +61,9 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-[10px] uppercase tracking-[0.22em] text-white/30">别处</h3>
+            <h3 className="text-[10px] uppercase tracking-[0.22em] text-white/30">
+              {footer.elsewhereLabel}
+            </h3>
             <ul className="mt-4 space-y-2.5">
               {elsewhere.map((item) => {
                 const Icon = item.icon
@@ -82,7 +87,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-[10px] text-white/30 sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} CarlJoy · 技术与生活</p>
+          <p>{footer.copyright.replace("%s", String(new Date().getFullYear()))}</p>
           <a
             href="https://beian.miit.gov.cn/"
             target="_blank"

@@ -39,3 +39,6 @@ next-env.d.ts
 # 手动上传的旧构建产物
 /carljoy-website-dist
 /carljoy-website-dist.zip
+
+# 本地预览截图
+/.preview/
